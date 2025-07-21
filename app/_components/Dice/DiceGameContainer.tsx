@@ -12,9 +12,9 @@ function DiceGameContainer() {
   const [winChance, setWinChance] = React.useState(50);
   const [result, setResult] = React.useState<
     | {
-        isWin: boolean;
-        randomNumber: number;
-      }[]
+      isWin: boolean;
+      randomNumber: number;
+    }[]
   >([]);
   const { setBalance, balance } = useCommonStore();
   const { user, token, fetchUser } = useAuthStore();
@@ -34,7 +34,7 @@ function DiceGameContainer() {
     setTargetNumber(data.roll);
     setGameStarted(true);
     setResult([...result, { isWin: data.win, randomNumber: data.roll }]);
-    if (data.newBalance !== undefined) {setBalance(data.newBalance);fetchUser(token);}
+    if (data.newBalance !== undefined) { setBalance(data.newBalance); fetchUser(token); }
   };
 
   return (

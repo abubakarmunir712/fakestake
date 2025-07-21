@@ -14,5 +14,13 @@
       "address": "wallet_54a2dba932a4934d",
       "balance": 682.6019999999996
     }
+  },
+  {
+    "username": "testing",
+    "password": "$2b$10$aG3aQZHPo45qvxt/BGM/Juui7PLGwd.bxlYRbkzCOEoNE4AGEYMim",
+    "wallet": {
+      "address": "wallet_dfb69f01a9b73b4a",
+      "balance": 1010.5608695652173
+    }
   }
 ]

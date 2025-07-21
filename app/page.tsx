@@ -29,6 +29,12 @@ const games = [
     logo: <Rocket size={48} />,
     img: "/assets/limbo.avif",
   },
+  {
+    name: "CRASH",
+    link: "/crash",
+    logo: <Rocket size={48} />,
+    img: "/assets/Crash.avif",
+  },
 ];
 
 export default function Home() {
