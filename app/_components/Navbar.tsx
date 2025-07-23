@@ -58,13 +58,13 @@ export default function Navbar() {
               {user && user.wallet ? (
                 <>
                   <span className="text-base font-medium">{user.wallet.balance.toFixed(2)}</span>
-                  <span className="ml-2 text-xs text-gray-300 font-semibold">Account Balance</span>
+                  <span className="hidden sm:inline ml-2 text-xs text-gray-300 font-semibold">Account Balance</span>
                 </>
               ) : (
-                <span className="text-base font-medium">Login</span>
+                <span className="hidden sm:inline text-base font-medium">Login</span>
               )}
             </div>
-            <a
+            {/* <a
               href="https://www.buymeacoffee.com/akshaygore"
               target="_blank"
               rel="noopener noreferrer"
@@ -74,11 +74,11 @@ export default function Navbar() {
               <span className="hidden sm:inline text-black ml-2 font-medium">
                 Buy Me Coffee
               </span>
-            </a>
+            </a> */}
           </div>
           <div>
             {user ? (
-              <div className="flex items-center gap-4">
+              <div className="hidden sm:flex items-center gap-4">
                 <span className="font-semibold text-white text-lg px-4 py-2 rounded-full bg-gradient-to-r from-blue-700 to-blue-500 shadow-sm">
                   {user.username}
                 </span>

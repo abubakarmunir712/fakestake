@@ -2,12 +2,12 @@
 import { useCommonStore } from "@/app/_store/commonStore";
 import { Coins } from "lucide-react";
 import React from "react";
-import { useLimboStore } from "@/app/_store/limboStore";
+import { useCrashStore } from "@/app/_store/crashStore";
 import { useAuthStore } from "@/app/_store/commonStore";
 
-function LimboConfig({ onBet }: { onBet: (amount: number) => void }) {
-  const { isRolling, setBetAmount, betAmount, multiplier, setMultiplier } =
-    useLimboStore();
+function CrashConfig({ onBet }: { onBet: (amount: number) => void }) {
+  const { isRunning, setBetAmount, betAmount, multiplier, setMultiplier } =
+    useCrashStore();
   const { user, token, fetchUser } = useAuthStore();
   const walletBalance = user?.wallet?.balance ?? 1000;
   const [inputValue, setInputValue] = React.useState<number>(0);
@@ -128,14 +128,14 @@ function LimboConfig({ onBet }: { onBet: (amount: number) => void }) {
           !betAmount ||
           betAmount <= 0 ||
           betAmount > walletBalance ||
-          isRolling ||
+          isRunning ||
           error !== ""
         }
       >
-        {isRolling ? "Rolling..." : "Bet"}
+        {isRunning ? "Running" : "Bet"}
       </button>
     </div>
   );
 }
 
-export default LimboConfig;
+export default CrashConfig;
