@@ -3,7 +3,7 @@ import React, { useState, useRef } from "react";
 import CrashComponent from "./CrashComponent";
 import CrashConfig from "./CrashConfig";
 import { useCrashStore } from "@/app/_store/crashStore";
-import { useCommonStore, useAuthStore } from "@/app/_store/commonStore";
+import { useAuthStore } from "@/app/_store/commonStore";
 
 export default function CrashContainer() {
   const {
@@ -42,14 +42,15 @@ export default function CrashContainer() {
       ...recentWins,
       { isWin, randomNumber: random },
     ]);
+    setIsRunning(false)
   };
 
   return (
-    <div className="flex flex-col lg:flex-row bg-background gap-4 lg:gap-8 p-4 w-full max-w-[100%] lg:max-w-[90%] mx-auto">
-      <div className="w-full lg:w-1/3 bg-primary">
+    <div className="flex flex-col xl:flex-row bg-background gap-4 xl:gap-8 p-4 w-full max-w-[100%] xl:max-w-[90%] mx-auto">
+      <div className="w-full xl:w-1/3 bg-primary">
         <CrashConfig onBet={handleBet} />
       </div>
-      <div className="w-full lg:w-2/3 h-fit">
+      <div className="w-full xl:w-2/3 h-fit">
         <CrashComponent onFinish={handleFinish} />
       </div>
     </div>
