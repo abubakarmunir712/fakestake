@@ -3,8 +3,9 @@ import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { loadUsers } from '@/app/_lib/userHelpers';
 
-const USERS_PATH = path.resolve(process.cwd(), 'users.json');
+// const USERS_PATH = path.resolve(process.cwd(), 'users.json');
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret_key';
 
 export async function POST(req: NextRequest) {
@@ -13,9 +14,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Username and password required' }, { status: 400 });
   }
   let users = [];
-  if (fs.existsSync(USERS_PATH)) {
-    users = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
-  }
+  users = await loadUsers()
+  console.log(users)
   const user = users.find((u: any) => u.username === username);
   if (!user) {
     return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });

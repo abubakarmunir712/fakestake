@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcryptjs';
+import { loadUsers, saveUser } from '@/app/_lib/userHelpers';
 
 const USERS_PATH = path.resolve(process.cwd(), 'users.json');
 
@@ -19,15 +20,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Username and password required' }, { status: 400 });
   }
   let users = [];
-  if (fs.existsSync(USERS_PATH)) {
-    users = JSON.parse(fs.readFileSync(USERS_PATH, 'utf-8'));
-  }
+  users = await loadUsers()
+  console.log(users)
   if (users.find((u: any) => u.username === username)) {
     return NextResponse.json({ error: 'User already exists' }, { status: 409 });
   }
   const hashedPassword = await bcrypt.hash(password, 10);
   const wallet = generateWallet();
-  users.push({ username, password: hashedPassword, wallet });
-  fs.writeFileSync(USERS_PATH, JSON.stringify(users, null, 2));
+  let user = { username, password: hashedPassword, wallet }
+  let a = await saveUser(user)
+  
+
   return NextResponse.json({ success: true });
 } 

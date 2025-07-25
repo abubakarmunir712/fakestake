@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { loadUsers ,updateUserBalance} from '@/app/_lib/userHelpers';
 
 const USERS_PATH = path.resolve(process.cwd(), 'users.json');
 const HOUSE_EDGE = 0.01;
@@ -56,24 +57,19 @@ const binPayouts: Record<RowCount, Record<RiskLevel, number[]>> = {
   },
 };
 
-function getUser(username: string) {
-  const users = JSON.parse(fs.readFileSync(USERS_PATH, 'utf8'));
+async function getUser(username: string) {
+  const users = await loadUsers();
   return users.find((u: any) => u.username === username);
 }
 
-function updateUserBalance(username: string, newBalance: number) {
-  const users = JSON.parse(fs.readFileSync(USERS_PATH, 'utf8'));
-  const user = users.find((u: any) => u.username === username);
-  if (user) user.wallet.balance = newBalance;
-  fs.writeFileSync(USERS_PATH, JSON.stringify(users, null, 2));
-}
+
 
 export async function POST(req: NextRequest) {
   const { betAmount, rowCount, riskLevel, username } = await req.json();
   if (!betAmount || !rowCount || !riskLevel || !username) {
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
   }
-  const user = getUser(username);
+  const user = await getUser(username);
   if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
   if (user.wallet.balance < betAmount) return NextResponse.json({ error: 'Insufficient balance' }, { status: 400 });
 
@@ -84,6 +80,6 @@ export async function POST(req: NextRequest) {
   const multiplier = bins[binIndex] * (1 - HOUSE_EDGE);
   const payout = betAmount * multiplier;
   const newBalance = user.wallet.balance - betAmount + payout;
-  updateUserBalance(username, newBalance);
+  await updateUserBalance(username, newBalance);
   return NextResponse.json({ binIndex, payout, newBalance });
 } 
