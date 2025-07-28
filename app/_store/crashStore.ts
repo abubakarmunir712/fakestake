@@ -11,6 +11,9 @@ type CrashStore = {
     setRecentWins: (value: { isWin: boolean; randomNumber: number }[]) => void;
     betAmount: number;
     setBetAmount: (value: number) => void;
+    screenMultiplierS: number;
+    setScreenMultiplierS: (value: number) => void
+
 };
 
 export const useCrashStore = create<CrashStore>()((set) => ({
@@ -24,4 +27,7 @@ export const useCrashStore = create<CrashStore>()((set) => ({
     setRecentWins: (value) => set({ recentWins: value }),
     betAmount: 0,
     setBetAmount: (value) => set({ betAmount: value }),
+    screenMultiplierS: 1,
+    setScreenMultiplierS: (value) => set({ screenMultiplierS: value }),
+
 }));

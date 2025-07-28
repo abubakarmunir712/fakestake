@@ -5,7 +5,7 @@ import React from "react";
 import { useCrashStore } from "@/app/_store/crashStore";
 import { useAuthStore } from "@/app/_store/commonStore";
 
-function CrashConfig({ onBet }: { onBet: (amount: number) => void }) {
+function CrashConfig({ onBet, cashout }: { onBet: (amount: number) => void, cashout: () => void }) {
   const { isRunning, setBetAmount, betAmount, multiplier, setMultiplier } =
     useCrashStore();
   const { user, token, fetchUser } = useAuthStore();
@@ -133,6 +133,20 @@ function CrashConfig({ onBet }: { onBet: (amount: number) => void }) {
         }
       >
         {isRunning ? "Running" : "Bet"}
+      </button>
+
+      <button
+        onClick={cashout}
+        className="w-full py-3 rounded-md bg-success text-black hover:bg-green-700 disabled:bg-gray-600 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
+        disabled={
+          !betAmount ||
+          betAmount <= 0 ||
+          betAmount > walletBalance ||
+          !isRunning ||
+          error !== ""
+        }
+      >
+        {isRunning ? "Cashout" : "Place Bet"}
       </button>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useCrashStore } from "@/app/_store/crashStore";
+import { cashedOut, cashedOutValue } from "@/app/_store/sharedVars";
 
 interface LimboComponentProps {
   onFinish?: (random: number, isWin: boolean) => void;
@@ -13,6 +14,7 @@ export default function LimboComponent({ onFinish }: LimboComponentProps) {
     displayMultiplier,
     recentWins,
     multiplier: targetMultiplier,
+    setScreenMultiplierS,
   } = useCrashStore();
 
 
@@ -84,9 +86,9 @@ export default function LimboComponent({ onFinish }: LimboComponentProps) {
     });
   }
 
+
   const drawCanvas = () => {
     if (isRunning) {
-
       const canvas = canvasRef.current;
       const ctx = canvas?.getContext("2d");
       if (!ctx) {
@@ -155,7 +157,7 @@ export default function LimboComponent({ onFinish }: LimboComponentProps) {
         }
       }
 
-      // Chnage division factor to increase speed as time passes
+      // Change division factor to increase speed as time passes
       if (screenMultiplier > 5) {
         if (screenMultiplier < 10) {
           divisionFactor = 360
@@ -220,14 +222,13 @@ export default function LimboComponent({ onFinish }: LimboComponentProps) {
       ctx.stroke();
 
       ctx.beginPath();
-      ctx.arc(xPos, yPos,3, 0, 2 * Math.PI); // x=100, y=100, radius=50
+      ctx.arc(xPos, yPos, 3, 0, 2 * Math.PI); // x=100, y=100, radius=50
       ctx.stroke();
 
+      screenMultiplier += (5 / divisionFactor)
+      setScreenMultiplierS(screenMultiplier);
 
-      screenMultiplier += 5 / divisionFactor;
-
-
-      if (!isFinished) {
+      if (!isFinished && !cashedOut) {
         ctx.fillStyle = "white"
         ctx.textAlign = "center"
         ctx.textBaseline = "middle"
@@ -236,7 +237,7 @@ export default function LimboComponent({ onFinish }: LimboComponentProps) {
       }
 
 
-      if (screenMultiplier < displayMultiplier && screenMultiplier < targetMultiplier) {
+      if (screenMultiplier < displayMultiplier && screenMultiplier < targetMultiplier && !cashedOut) {
         // if (true){
         animationId = requestAnimationFrame(drawCanvas)
       }
@@ -248,13 +249,18 @@ export default function LimboComponent({ onFinish }: LimboComponentProps) {
         let didWin = displayMultiplier >= targetMultiplier;
         let color = didWin ? '#00C915' : '#EF4444'
         let finalvalue = didWin ? targetMultiplier : displayMultiplier
+        if (cashedOut){
+          finalvalue = cashedOutValue
+          didWin = true
+          color = '#00C915'
+        }
         let emoji = `${didWin ? '💵' : '💥'}`
 
         ctx.fillStyle = color
         ctx.textAlign = "center"
         ctx.textBaseline = "middle"
         ctx.font = `bold ${isSmallScreen ? '30' : '60'}px Outfit`;
-        ctx.fillText(`${emoji} ${finalvalue}x`, canvas.width / 2, canvas.height / 2.4);
+        ctx.fillText(`${emoji} ${finalvalue.toFixed(2)}x`, canvas.width / 2, canvas.height / 2.4);
         cancelAnimationFrame(animationId)
         onFinish?.(displayMultiplier, didWin)
       }
